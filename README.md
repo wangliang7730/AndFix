@@ -1,5 +1,27 @@
 # AndFix
 
+Android插件化是为了解决什么问题？
+
+65536方法数爆棚。
+减少apk体积。
+不通过发版就能发布新功能
+不通过发版就能修复线上bug和崩溃。
+
+
+但我们经过实践发现，插件化更多的运用于修复线上bug和崩溃。这是一个很轻量的需求，却为此花费了大量的人力和财力去运行这样一套庞大的架构体系，是相当不划算的。为此，2015年github上出现了AndFix，这款Android轻量级线上bug修复工具。
+
+AndFix的核心思想是，把app中的方法B替换为新的方法B ‘,为此，我们把新方法B’所在的代码进行重新打包，并和就的apk包进行差分比较，得到一个差分包，放到服务器提供旧版apk下载，那么apk在接收到差分包后，就会执行新的方法B’了，如下图所示：
+
+这类似于iOS的JSPatch实现。只不过Objective-C是一门动态语言，天生就支持这样的特性。而在Android中，则需要修改Native底层了。
+
+在Native底层，有一个dalvik_dispatcher方法负责最终执行哪个方法。就是在这里做一些手脚，把旧方法替换为新方法。
+
+对于功能不是很多的App而言，AndFix是首选，可以快速修复线上bug而不用发新版，而实现成本也很低。对于规模不大的团队而言，相当划算。
+
+这里不得不说到dexposed。dexposed和AndFix都是阿里推出的开源框架，用以解决Android热修复的两种实现，原理两者类似，都是在在Native底层的dalvik_dispatcher方法做文章。但是dexposed有一个硬伤，就是不支持art，这使得很多粉丝转而去投标AndFix阵营。dexposed的github地址为：
+
+https://github.com/alibaba/dexposed
+
 [![Download](https://api.bintray.com/packages/supern/maven/andfix/images/download.svg) ](https://bintray.com/supern/maven/andfix/_latestVersion)
 [![Build Status](https://travis-ci.org/alibaba/AndFix.svg)](https://travis-ci.org/alibaba/AndFix)
 [![Software License](https://rawgit.com/alibaba/AndFix/master/images/license.svg)](LICENSE)
